@@ -3,10 +3,9 @@
 import numpy as np
 import heapq
 
-data = open("data1.txt").read()
+data = np.genfromtxt("data1.txt", dtype=int)
+h1, h2 = data[:, 0].tolist(), data[:, 1].tolist()
 
-data = np.array([x.split() for x in (data.splitlines())]).transpose()
-h1, h2 = [list(map(int, x.tolist())) for x in (data[0, :], data[1, :])]
 [heapq.heapify(h) for h in (h1, h2)]
 total = 0
 while h1 and h2:
