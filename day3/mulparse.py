@@ -8,8 +8,10 @@ from parsimonious.nodes import NodeVisitor
 # Define a simple grammar for arithmetic expressions
 grammar = Grammar(
     r"""
-    expr = (mul_expr / space / badmul / any)+
+    expr = (mul_expr / do_expr / dont_expr / space / badmul / any)+
     mul_expr = "mul" "(" number "," number ")"
+    do_expr = "do()"
+    dont_expr = "don't()"
     number = ~r"\d\d?\d?"
     space = ~r"\s+"
     badmul = ~r"mul(?!mul)*"
@@ -19,8 +21,22 @@ grammar = Grammar(
 
 
 class Calculator(NodeVisitor):
+    def __init__(self):
+        super().__init__
+        self._do = True
+
     def visit_expr(self, node, visited_children):
-        return sum([v[0] for v in visited_children if type(v[0]) is int])
+        sum = 0
+        for v in visited_children:
+            if type(v[0]) is int:
+                if self._do:
+                    sum += v[0]
+            elif v[0].text == "do()":
+                self._do = True
+            elif v[0].text == "don't()":
+                self._do = False
+
+        return sum
 
     def visit_mul_expr(self, node, visited_children):
         return visited_children[2] * visited_children[4]
