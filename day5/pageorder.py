@@ -5,19 +5,14 @@ from collections import defaultdict
 
 graph = defaultdict(lambda: set())
 candidates = []
-left_set = set()
-right_set = set()
 with open("data1.txt") as f:
     for line in f.readlines():
         if "|" in line:
             x, y = [int(v) for v in line.split("|")]
-            left_set.add(x)
-            right_set.add(y)
             graph[y].add(x)
         elif "," in line:
             line = [int(i) for i in line.strip().split(",")]
             candidates.append(line)
-graph = dict(graph)
 
 sum = 0
 for c in candidates:
